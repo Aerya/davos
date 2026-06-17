@@ -521,8 +521,132 @@ var interval = (function($) {
 
 }(jQuery));
 
+var browser = (function($, settings) {
+
+    'use strict';
+
+    var initialise, open, load, render, state;
+
+    state = {
+        mode: null,        // 'remote' or 'local'
+        targetInput: null, // jQuery input to populate on select
+        currentPath: null
+    };
+
+    initialise = function() {
+
+        $('#browseHostDirectory').on('click', function() {
+
+            var hostId = $('#host option:checked').attr('value');
+
+            if (!hostId) {
+                settings.notify('danger', 'Please select a host first.', 'glyphicon-warning-sign');
+                return;
+            }
+
+            open('remote', $('#hostDirectory'), 'Browse host directory');
+        });
+
+        $('#browseLocalDirectory').on('click', function() {
+            open('local', $('#localDirectory'), 'Browse local directory');
+        });
+
+        $('#directoryBrowserList').on('click', '.directory-entry', function(e) {
+            e.preventDefault();
+            load($(this).attr('data-path'));
+        });
+
+        $('#directoryBrowserSelect').on('click', function() {
+
+            if (null !== state.currentPath) {
+                state.targetInput.val(state.currentPath);
+                state.targetInput.parents('.form-group').removeClass('has-error');
+            }
+
+            $('#directoryBrowserModal').modal('hide');
+        });
+    };
+
+    open = function(mode, targetInput, title) {
+
+        state.mode = mode;
+        state.targetInput = targetInput;
+        state.currentPath = null;
+
+        $('#directoryBrowserTitle').text(title);
+        $('#directoryBrowserPath').text('');
+        $('#directoryBrowserList').empty();
+        $('#directoryBrowserEmpty').addClass('hide');
+
+        $('#directoryBrowserModal').modal('show');
+
+        load($.trim(targetInput.val()));
+    };
+
+    load = function(path) {
+
+        var url;
+
+        if ('remote' === state.mode) {
+            var hostId = $('#host option:checked').attr('value');
+            url = '/api/v2/host/' + hostId + '/directories';
+        } else {
+            url = '/api/v2/browse/local';
+        }
+
+        if (path && path.length > 0) {
+            url += '?path=' + encodeURIComponent(path);
+        }
+
+        $.ajax({
+            method: 'GET',
+            url: url,
+            dataType: 'json'
+        }).done(function(msg) {
+            render(msg.body);
+        }).fail(function(msg) {
+            var reason = (msg.responseJSON && msg.responseJSON.body) ? msg.responseJSON.body : 'Unable to list directory';
+            settings.notify('danger', 'There was an error: ' + reason, 'glyphicon-warning-sign');
+        });
+    };
+
+    render = function(listing) {
+
+        state.currentPath = listing.path;
+        $('#directoryBrowserPath').text(listing.path);
+
+        var $list = $('#directoryBrowserList').empty();
+
+        var entry = function(path, iconClass, label) {
+
+            return $('<a />', {
+                'href': '#',
+                'class': 'list-group-item directory-entry'
+            }).attr('data-path', path)
+              .append($('<span />', { 'class': 'glyphicon ' + iconClass }))
+              .append(document.createTextNode(' ' + label));
+        };
+
+        if (null !== listing.parent) {
+            $list.append(entry(listing.parent, 'glyphicon-arrow-up', '..'));
+        }
+
+        $.each(listing.directories, function(index, dir) {
+            $list.append(entry(dir.path, 'glyphicon-folder-close', dir.name));
+        });
+
+        $('#directoryBrowserEmpty').toggleClass('hide', listing.directories.length > 0 || null !== listing.parent);
+    };
+
+    return {
+        init: initialise
+    };
+
+}(jQuery, settings));
+
 jQuery(document).ready(host.init);
 jQuery(document).ready(schedule.init);
 jQuery(document).ready(fragments.init);
 jQuery(document).ready(settings.init);
 jQuery(document).ready(interval.init);
+jQuery(document).ready(browser.init);

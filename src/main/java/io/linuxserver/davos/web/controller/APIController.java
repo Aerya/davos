@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.linuxserver.davos.delegation.services.HostService;
+import io.linuxserver.davos.delegation.services.LocalFileService;
 import io.linuxserver.davos.delegation.services.ScheduleService;
 import io.linuxserver.davos.delegation.services.SettingsService;
 import io.linuxserver.davos.exception.HostInUseException;
@@ -40,6 +41,9 @@ public class APIController {
 
     @Resource
     private SettingsService settingsService;
+
+    @Resource
+    private LocalFileService localFileService;
 
     @RequestMapping(value = "/schedule", method = RequestMethod.POST)
     public ResponseEntity<APIResponse> createSchedule(@RequestBody Schedule schedule) {
@@ -201,6 +205,36 @@ public class APIController {
         }
 
         return ResponseEntity.status(status).body(response);
+    }
+
+    @RequestMapping(value = "/host/{id}/directories", method = RequestMethod.GET)
+    public ResponseEntity<APIResponse> browseHostDirectories(@PathVariable("id") Long id,
+            @RequestParam(value = "path", required = false) String path) {
+
+        APIResponse response = APIResponseBuilder.create();
+        HttpStatus status = HttpStatus.OK;
+
+        try {
+            response.withBody(hostService.browseDirectory(id, path));
+        } catch (FTPException e) {
+
+            LOGGER.error("Failed to browse host directory");
+            LOGGER.debug("Exception: ", e);
+
+            Throwable cause = (null != e.getCause()) ? e.getCause() : e;
+            response.withBody(cause.getMessage()).withStatus("Failed");
+            status = HttpStatus.BAD_REQUEST;
+        }
+
+        return ResponseEntity.status(status).body(response);
+    }
+
+    @RequestMapping(value = "/browse/local", method = RequestMethod.GET)
+    public ResponseEntity<APIResponse> browseLocalDirectories(
+            @RequestParam(value = "path", required = false) String path) {
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(APIResponseBuilder.create().withBody(localFileService.browse(path)));
     }
 
     @RequestMapping(value = "/settings/log", method = RequestMethod.POST)

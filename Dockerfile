@@ -31,7 +31,9 @@ LABEL org.opencontainers.image.title="davos" \
 WORKDIR /app
 
 # Persistent data: H2 database and logs live here (see conf/release).
-VOLUME ["/config"]
+# /download is where you mount the media volume that davos downloads into; it
+# is also the root browsable from the schedule "Local Directory" field.
+VOLUME ["/config", "/download"]
 
 # Default Spring Boot web port.
 EXPOSE 8080

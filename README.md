@@ -4,7 +4,7 @@ Fixes :
 - Added remote FTP and local browsing features to browse and select folders
 
 
-[Screens]([http://localhost:8080](https://upandclear.org/2026/06/17/davos-automatisation-ftp-avec-webui/))
+[Screens](https://upandclear.org/2026/06/17/davos-automatisation-ftp-avec-webui/)
 
 
 

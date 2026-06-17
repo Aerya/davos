@@ -77,10 +77,12 @@ public class APIController {
 
         boolean hasPushbulletIds = schedule.getNotifications().getPushbullet().stream().anyMatch(pb -> pb.getId() != null);
         boolean hasSnsIds = schedule.getNotifications().getSns().stream().anyMatch(pb -> pb.getId() != null);
+        boolean hasDiscordIds = schedule.getNotifications().getDiscord().stream().anyMatch(d -> d.getId() != null);
+        boolean hasAppriseIds = schedule.getNotifications().getApprise().stream().anyMatch(a -> a.getId() != null);
         boolean hasFilterIds = schedule.getFilters().stream().anyMatch(f -> f.getId() != null);
         boolean hasApiIds = schedule.getApis().stream().anyMatch(a -> a.getId() != null);
 
-        if (null != schedule.getId() || hasPushbulletIds || hasSnsIds || hasFilterIds || hasApiIds)
+        if (null != schedule.getId() || hasPushbulletIds || hasSnsIds || hasDiscordIds || hasAppriseIds || hasFilterIds || hasApiIds)
             return false;
 
         return true;

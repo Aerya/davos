@@ -13,6 +13,8 @@ import io.linuxserver.davos.persistence.model.FilterModel;
 import io.linuxserver.davos.persistence.model.ScheduleModel;
 import io.linuxserver.davos.transfer.ftp.FileTransferType;
 import io.linuxserver.davos.web.API;
+import io.linuxserver.davos.web.Apprise;
+import io.linuxserver.davos.web.Discord;
 import io.linuxserver.davos.web.Filter;
 import io.linuxserver.davos.web.Pushbullet;
 import io.linuxserver.davos.web.SNS;
@@ -78,6 +80,23 @@ public class ScheduleConverter implements Converter<ScheduleModel, Schedule> {
                 sns.setSecretAccessKey(action.f4);
 
                 schedule.getNotifications().getSns().add(sns);
+
+            } else if ("discord".equals(action.actionType)) {
+
+                Discord discord = new Discord();
+                discord.setId(action.id);
+                discord.setWebhookUrl(action.f1);
+
+                schedule.getNotifications().getDiscord().add(discord);
+
+            } else if ("apprise".equals(action.actionType)) {
+
+                Apprise apprise = new Apprise();
+                apprise.setId(action.id);
+                apprise.setServerUrl(action.f1);
+                apprise.setUrls(action.f2);
+
+                schedule.getNotifications().getApprise().add(apprise);
             }
         }
 
@@ -147,6 +166,33 @@ public class ScheduleConverter implements Converter<ScheduleModel, Schedule> {
             actionModel.f2 = action.getRegion();
             actionModel.f3 = action.getAccessKey();
             actionModel.f4 = action.getSecretAccessKey();
+            actionModel.schedule = model;
+
+            model.actions.add(actionModel);
+        }
+
+        for (Discord action : source.getNotifications().getDiscord()) {
+
+            LOGGER.debug("Converting Discord to internal action: {}", action.getWebhookUrl());
+
+            ActionModel actionModel = new ActionModel();
+            actionModel.id = action.getId();
+            actionModel.actionType = "discord";
+            actionModel.f1 = action.getWebhookUrl();
+            actionModel.schedule = model;
+
+            model.actions.add(actionModel);
+        }
+
+        for (Apprise action : source.getNotifications().getApprise()) {
+
+            LOGGER.debug("Converting Apprise to internal action: {}", action.getServerUrl());
+
+            ActionModel actionModel = new ActionModel();
+            actionModel.id = action.getId();
+            actionModel.actionType = "apprise";
+            actionModel.f1 = action.getServerUrl();
+            actionModel.f2 = action.getUrls();
             actionModel.schedule = model;
 
             model.actions.add(actionModel);

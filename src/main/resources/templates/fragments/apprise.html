@@ -1,0 +1,25 @@
+<div class="well notification apprise">
+
+	<h4>Apprise</h4>
+
+    <div class="form-group">
+        <label class="col-lg-2 control-label">Server URL <span data-toggle="popover" data-trigger="hover" data-placement="top" data-content="Base URL of your Apprise API server (caronc/apprise-api), e.g. http://apprise:8000" class="help glyphicon glyphicon-question-sign"></span></label>
+        <div class="col-lg-10">
+            <input type="text" class="form-control serverUrl" placeholder="http://apprise:8000" autocomplete="off" />
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-lg-2 control-label">Notification URLs <span data-toggle="popover" data-trigger="hover" data-placement="top" data-content="One or more Apprise URLs (comma separated), e.g. discord://id/token, tgram://bottoken/chatid" class="help glyphicon glyphicon-question-sign"></span></label>
+        <div class="col-lg-10">
+            <input type="text" class="form-control urls" placeholder="discord://webhook_id/webhook_token" autocomplete="off" />
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-lg-12 align-right">
+            <button type="button" class="btn btn-danger btn-sm remove-notification">Remove</button>
+        </div>
+    </div>
+
+</div>

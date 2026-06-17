@@ -56,6 +56,12 @@ docker run -d \
 The web UI is then available on [http://localhost:8080](http://localhost:8080).
 
 # Changelog
+- **2.4.0**
+  - Added **Discord** and **Apprise** notifications, alongside the existing Pushbullet and Amazon SNS options, in the schedule editor's Notifications section.
+    - Discord: paste a channel webhook URL.
+    - Apprise: point to an [Apprise API](https://github.com/caronc/apprise-api) server and provide one or more Apprise notification URLs.
+  - Added a **Schedules** entry in the top navigation bar so the running schedules (with their live progress) are reachable in one click from any page.
+
 - **2.3.1**
   - Static assets (`davos.js`, `davos.css`) are now versioned in the page URLs so browsers always reload them after an upgrade, instead of serving a stale cached copy. This fixes the schedule **Browse** buttons appearing to do nothing when an old `davos.js` was still cached.
 

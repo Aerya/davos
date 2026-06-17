@@ -299,7 +299,52 @@
 							            <button type="button" class="btn btn-danger btn-sm remove-notification">Remove</button>
 							        </div>
 							    </div>
-							
+
+							</div>
+
+							<div class="well notification discord" th:each="discord : *{notifications.discord}" th:attr="data-notification-id=${discord.id}">
+
+								<h4>Discord</h4>
+
+							    <div class="form-group">
+							        <label class="col-lg-2 control-label">Webhook URL <span data-toggle="popover" data-trigger="hover" data-placement="top" data-content="The Discord channel webhook URL (Server Settings &gt; Integrations &gt; Webhooks)" class="help glyphicon glyphicon-question-sign"></span></label>
+							        <div class="col-lg-10">
+							            <input type="text" class="form-control webhookUrl" th:value="${discord.webhookUrl}" placeholder="https://discord.com/api/webhooks/..." autocomplete="off" />
+							        </div>
+							    </div>
+
+							    <div class="form-group">
+							        <div class="col-lg-12 align-right">
+							            <button type="button" class="btn btn-danger btn-sm remove-notification">Remove</button>
+							        </div>
+							    </div>
+
+							</div>
+
+							<div class="well notification apprise" th:each="apprise : *{notifications.apprise}" th:attr="data-notification-id=${apprise.id}">
+
+								<h4>Apprise</h4>
+
+							    <div class="form-group">
+							        <label class="col-lg-2 control-label">Server URL <span data-toggle="popover" data-trigger="hover" data-placement="top" data-content="Base URL of your Apprise API server (caronc/apprise-api), e.g. http://apprise:8000" class="help glyphicon glyphicon-question-sign"></span></label>
+							        <div class="col-lg-10">
+							            <input type="text" class="form-control serverUrl" th:value="${apprise.serverUrl}" placeholder="http://apprise:8000" autocomplete="off" />
+							        </div>
+							    </div>
+
+							    <div class="form-group">
+							        <label class="col-lg-2 control-label">Notification URLs <span data-toggle="popover" data-trigger="hover" data-placement="top" data-content="One or more Apprise URLs (comma separated), e.g. discord://id/token, tgram://bottoken/chatid" class="help glyphicon glyphicon-question-sign"></span></label>
+							        <div class="col-lg-10">
+							            <input type="text" class="form-control urls" th:value="${apprise.urls}" placeholder="discord://webhook_id/webhook_token" autocomplete="off" />
+							        </div>
+							    </div>
+
+							    <div class="form-group">
+							        <div class="col-lg-12 align-right">
+							            <button type="button" class="btn btn-danger btn-sm remove-notification">Remove</button>
+							        </div>
+							    </div>
+
 							</div>
 
                         </div>
@@ -314,6 +359,8 @@
                                 <ul class="dropdown-menu">
                                     <li><a id="newPushbullet">Pushbullet</a></li>
                                     <li><a id="newSns">Amazon SNS</a></li>
+                                    <li><a id="newDiscord">Discord</a></li>
+                                    <li><a id="newApprise">Apprise</a></li>
                                 </ul>
                             </div>
                         </div>

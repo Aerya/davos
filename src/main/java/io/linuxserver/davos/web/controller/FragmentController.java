@@ -44,7 +44,17 @@ public class FragmentController {
     public String notificationSns() {
         return "fragments/sns";
     }
-    
+
+    @RequestMapping("/notification/discord")
+    public String notificationDiscord() {
+        return "fragments/discord";
+    }
+
+    @RequestMapping("/notification/apprise")
+    public String notificationApprise() {
+        return "fragments/apprise";
+    }
+
     @RequestMapping("/api")
     public String api() {
         return "fragments/api";

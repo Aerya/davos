@@ -6,6 +6,8 @@ import io.linuxserver.davos.persistence.model.ActionModel;
 import io.linuxserver.davos.persistence.model.FilterModel;
 import io.linuxserver.davos.persistence.model.HostModel;
 import io.linuxserver.davos.persistence.model.ScheduleModel;
+import io.linuxserver.davos.schedule.workflow.actions.AppriseNotifyAction;
+import io.linuxserver.davos.schedule.workflow.actions.DiscordNotifyAction;
 import io.linuxserver.davos.schedule.workflow.actions.HttpAPICallAction;
 import io.linuxserver.davos.schedule.workflow.actions.MoveFileAction;
 import io.linuxserver.davos.schedule.workflow.actions.PushbulletNotifyAction;
@@ -50,6 +52,12 @@ public class ScheduleConfigurationFactory {
             
             if ("sns".equals(action.actionType))
                 config.getActions().add(new SNSNotifyAction(action.f2, action.f1, action.f3, action.f4));
+
+            if ("discord".equals(action.actionType))
+                config.getActions().add(new DiscordNotifyAction(action.f1));
+
+            if ("apprise".equals(action.actionType))
+                config.getActions().add(new AppriseNotifyAction(action.f1, action.f2));
 
             if ("api".equals(action.actionType))
                 config.getActions().add(new HttpAPICallAction(action.f1, action.f2, action.f3, action.f4));

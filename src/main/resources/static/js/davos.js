@@ -92,6 +92,14 @@ var fragments = (function($) {
             $('#notifications').append($("<div />").load("/fragments/notification/sns"));
         });
 
+        $('#newDiscord').on('click', function() {
+            $('#notifications').append($("<div />").load("/fragments/notification/discord"));
+        });
+
+        $('#newApprise').on('click', function() {
+            $('#notifications').append($("<div />").load("/fragments/notification/apprise"));
+        });
+
         $('#addFilter').on('click', function() {
 
             if ($.trim($('#newFilter').val()).length > 0) {
@@ -172,7 +180,9 @@ var schedule = (function($, settings) {
                     filters: [],
                     notifications: {
                     	pushbullet: [],
-                    	sns: []
+                    	sns: [],
+                    	discord: [],
+                    	apprise: []
                     },
                     apis: []
                 };
@@ -194,13 +204,30 @@ var schedule = (function($, settings) {
                 });
                 
                 $('#notifications .notification.sns').each(function() {
-                	
+
                     postData.notifications.sns.push({
                         "id": cleanId($(this).attr('data-notification-id')),
                         "topicArn": $(this).find('.topicArn').val(),
                         "region": $(this).find('.region').val(),
                         "accessKey": $(this).find('.accessKey').val(),
                         "secretAccessKey": $(this).find('.secretAccessKey').val()
+                    });
+                });
+
+                $('#notifications .notification.discord').each(function() {
+
+                    postData.notifications.discord.push({
+                        "id": cleanId($(this).attr('data-notification-id')),
+                        "webhookUrl": $(this).find('.webhookUrl').val()
+                    });
+                });
+
+                $('#notifications .notification.apprise').each(function() {
+
+                    postData.notifications.apprise.push({
+                        "id": cleanId($(this).attr('data-notification-id')),
+                        "serverUrl": $(this).find('.serverUrl').val(),
+                        "urls": $(this).find('.urls').val()
                     });
                 });
 

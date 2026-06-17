@@ -1,0 +1,11 @@
+.git
+.github
+.gradle
+build
+/code
+docs
+*.iml
+.idea
+.vscode
+.DS_Store
+davos.log

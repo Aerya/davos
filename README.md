@@ -38,6 +38,10 @@ Finally, schedules can be started or stopped at any point, using the schedules l
 ![https://raw.githubusercontent.com/linuxserver/davos/master/docs/list.PNG](https://raw.githubusercontent.com/linuxserver/davos/master/docs/list.PNG)
 
 # Changelog
+- **2.2.3**
+  - Replaced the unmaintained `com.jcraft:jsch` 0.1.50 SSH library with the maintained `com.github.mwiede:jsch` fork. This fixes the `Algorithm negotiation fail` error when connecting via SFTP to modern SSH servers that no longer offer legacy key-exchange, host-key and cipher algorithms.
+  - Added a Dockerfile and a GitHub Actions workflow that publishes a container image to the GitHub Container Registry.
+
 - **2.2.2**
   - Updated log4j dependency to 2.16.0, accounting for CVE-2021-44228
 

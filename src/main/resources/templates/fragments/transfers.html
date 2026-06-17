@@ -36,3 +36,11 @@
         </tr>
     </tbody>
 </table>
+
+<div th:if="${#lists.isEmpty(schedule.transfers) and schedule.running}" class="text-muted transfer-idle">
+    <span class="glyphicon glyphicon-refresh"></span>&nbsp;
+    No active transfer right now.
+    <span th:if="${schedule.lastRunTime}" th:inline="text">Last scan: <strong>[[${schedule.lastRunTime}]]</strong>.</span>
+    <span th:unless="${schedule.lastRunTime}">Waiting for the first scan&hellip;</span>
+    <span th:if="${schedule.interval > 0}" th:inline="text">Re-scans every <strong>[[${schedule.interval}]]</strong> min.</span>
+</div>

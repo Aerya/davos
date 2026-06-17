@@ -56,6 +56,9 @@ docker run -d \
 The web UI is then available on [http://localhost:8080](http://localhost:8080).
 
 # Changelog
+- **2.4.1**
+  - A running schedule with no active transfer now shows a short status line (last scan time and re-scan interval) instead of an empty panel. The live progress table still appears while a scan is actually downloading files; between scans the schedule simply reports that it is idle.
+
 - **2.4.0**
   - Added **Discord** and **Apprise** notifications, alongside the existing Pushbullet and Amazon SNS options, in the schedule editor's Notifications section.
     - Discord: paste a channel webhook URL.

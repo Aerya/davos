@@ -17,7 +17,7 @@
 	<meta name="theme-color" content="#ffffff" />
 
     <link type="text/css" rel="stylesheet" th:href="@{/css/bootstrap.min.css}" media="screen,projection" />
-    <link type="text/css" rel="stylesheet" th:href="@{/css/davos.css}" media="screen" />
+    <link type="text/css" rel="stylesheet" th:href="@{/css/davos.css(v=${currentVersion})}" media="screen" />
 
 
 </head>
@@ -90,7 +90,7 @@
     <script type="text/javascript" th:src="@{/js/jquery-2.1.4.min.js}"></script>
     <script type="text/javascript" th:src="@{/js/bootstrap.min.js}"></script>
     <script type="text/javascript" th:src="@{/js/bootstrap-notify.min.js}"></script>
-    <script type="text/javascript" th:src="@{/js/davos.js}"></script>
+    <script type="text/javascript" th:src="@{/js/davos.js(v=${currentVersion})}"></script>
 
 </body>
 

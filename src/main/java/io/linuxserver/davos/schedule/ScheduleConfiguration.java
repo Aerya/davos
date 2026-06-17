@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.linuxserver.davos.schedule.workflow.actions.PostDownloadAction;
+import io.linuxserver.davos.schedule.workflow.actions.ScheduleSummaryAction;
 import io.linuxserver.davos.transfer.ftp.FileTransferType;
 import io.linuxserver.davos.transfer.ftp.TransferProtocol;
 import io.linuxserver.davos.transfer.ftp.client.UserCredentials;
@@ -19,6 +20,7 @@ public class ScheduleConfiguration {
     private String scheduleName;
     private List<String> filters = new ArrayList<String>();
     private List<PostDownloadAction> actions = new ArrayList<PostDownloadAction>();
+    private List<ScheduleSummaryAction> summaryActions = new ArrayList<ScheduleSummaryAction>();
     private FileTransferType transferType;
     private boolean filtersMandatory;
     private boolean invertFilters;
@@ -83,6 +85,14 @@ public class ScheduleConfiguration {
 
     public void setActions(List<PostDownloadAction> actions) {
         this.actions = actions;
+    }
+
+    public List<ScheduleSummaryAction> getSummaryActions() {
+        return summaryActions;
+    }
+
+    public void setSummaryActions(List<ScheduleSummaryAction> summaryActions) {
+        this.summaryActions = summaryActions;
     }
 
     public FileTransferType getTransferType() {

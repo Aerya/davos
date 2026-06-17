@@ -37,7 +37,28 @@ Finally, schedules can be started or stopped at any point, using the schedules l
 
 ![https://raw.githubusercontent.com/linuxserver/davos/master/docs/list.PNG](https://raw.githubusercontent.com/linuxserver/davos/master/docs/list.PNG)
 
+# Docker
+
+A container image is published to the GitHub Container Registry on every push to `master`:
+
+```
+docker run -d \
+  --name davos \
+  -p 8080:8080 \
+  -v /path/to/config:/config \
+  -v /path/to/downloads:/download \
+  ghcr.io/aerya/davos:latest
+```
+
+- `/config` holds the H2 database and logs.
+- `/download` is the directory davos downloads into, and the root that the schedule **Local Directory** browser can explore. Point a schedule's local directory anywhere under `/download`.
+
+The web UI is then available on [http://localhost:8080](http://localhost:8080).
+
 # Changelog
+- **2.3.0**
+  - Added a directory browser to the schedule editor. The **Host Directory** field can now browse the remote FTP/SFTP server, and the **Local Directory** field can browse the volume mounted at `/download` in the container, so folders can be picked instead of typed by hand.
+
 - **2.2.3**
   - Replaced the unmaintained `com.jcraft:jsch` 0.1.50 SSH library with the maintained `com.github.mwiede:jsch` fork. This fixes the `Algorithm negotiation fail` error when connecting via SFTP to modern SSH servers that no longer offer legacy key-exchange, host-key and cipher algorithms.
   - Added a Dockerfile and a GitHub Actions workflow that publishes a container image to the GitHub Container Registry.

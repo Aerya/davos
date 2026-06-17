@@ -56,6 +56,9 @@ docker run -d \
 The web UI is then available on [http://localhost:8080](http://localhost:8080).
 
 # Changelog
+- **2.3.1**
+  - Static assets (`davos.js`, `davos.css`) are now versioned in the page URLs so browsers always reload them after an upgrade, instead of serving a stale cached copy. This fixes the schedule **Browse** buttons appearing to do nothing when an old `davos.js` was still cached.
+
 - **2.3.0**
   - Added a directory browser to the schedule editor. The **Host Directory** field can now browse the remote FTP/SFTP server, and the **Local Directory** field can browse the volume mounted at `/download` in the container, so folders can be picked instead of typed by hand.
 

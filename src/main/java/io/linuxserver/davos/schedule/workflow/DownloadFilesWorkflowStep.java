@@ -1,9 +1,13 @@
 package io.linuxserver.davos.schedule.workflow;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import io.linuxserver.davos.schedule.ScheduleConfiguration;
+import io.linuxserver.davos.schedule.workflow.actions.ScheduleSummaryAction;
 import io.linuxserver.davos.schedule.workflow.transfer.FTPTransfer;
 import io.linuxserver.davos.schedule.workflow.transfer.TransferStrategy;
 import io.linuxserver.davos.schedule.workflow.transfer.TransferStrategyFactory;
@@ -32,28 +36,34 @@ public class DownloadFilesWorkflowStep extends WorkflowStep {
         strategyToUse.setPostDownloadActions(schedule.getConfig().getActions());
         LOGGER.debug("PostDownloadActions: {} have been set against chosen strategy", schedule.getConfig().getActions());
 
+        List<String> downloadedFileNames = new ArrayList<String>();
+
         try {
 
             if (schedule.getFilesToDownload().isEmpty())
                 LOGGER.info("There are no files to download in this run");
-            
+
             for (FTPTransfer transfer : schedule.getFilesToDownload()) {
 
                 LOGGER.debug("Generating listener for transfer");
 
                 FTPFile file = transfer.getFile();
-                
+
                 ProgressListener listener = new ListenerFactory().createListener(config.getConnectionType());
                 schedule.getConnection().setProgressListener(listener);
                 transfer.setListener(listener);
-                
+
                 strategyToUse.transferFile(transfer, config.getLocalFilePath());
-                
+
+                if (FTPTransfer.State.FINISHED == transfer.getState())
+                    downloadedFileNames.add(file.getName());
+
                 if (config.isDeleteHostFile())
                     schedule.getConnection().deleteRemoteFile(file);
             }
 
             LOGGER.info("Download step complete. Moving onto next step");
+            runSummaryActions(config, downloadedFileNames);
             schedule.getFilesToDownload().clear();
 
         } catch (FTPException e) {
@@ -65,5 +75,17 @@ public class DownloadFilesWorkflowStep extends WorkflowStep {
         }
 
         nextStep.runStep(schedule);
+    }
+
+    private void runSummaryActions(ScheduleConfiguration config, List<String> downloadedFileNames) {
+
+        if (downloadedFileNames.isEmpty())
+            return;
+
+        LOGGER.info("Running {} summary action(s) for {} downloaded file(s)", config.getSummaryActions().size(),
+                downloadedFileNames.size());
+
+        for (ScheduleSummaryAction action : config.getSummaryActions())
+            action.execute(downloadedFileNames);
     }
 }

@@ -54,10 +54,10 @@ public class ScheduleConfigurationFactory {
                 config.getActions().add(new SNSNotifyAction(action.f2, action.f1, action.f3, action.f4));
 
             if ("discord".equals(action.actionType))
-                config.getActions().add(new DiscordNotifyAction(action.f1));
+                config.getSummaryActions().add(new DiscordNotifyAction(action.f1, model.name));
 
             if ("apprise".equals(action.actionType))
-                config.getActions().add(new AppriseNotifyAction(action.f1, action.f2));
+                config.getSummaryActions().add(new AppriseNotifyAction(action.f1, action.f2, model.name));
 
             if ("api".equals(action.actionType))
                 config.getActions().add(new HttpAPICallAction(action.f1, action.f2, action.f3, action.f4));

@@ -50,12 +50,16 @@ docker run -d \
   ghcr.io/aerya/davos:latest
 ```
 
-- `/config` holds the H2 database and logs.
+- `/config` holds the H2 database and logs. General logs are in `/config/logs/davos.log`; each schedule additionally gets its own file under `/config/logs/schedules/<schedule name>.log`.
 - `/download` is the directory davos downloads into, and the root that the schedule **Local Directory** browser can explore. Point a schedule's local directory anywhere under `/download`.
 
 The web UI is then available on [http://localhost:8080](http://localhost:8080).
 
 # Changelog
+- **2.5.0**
+  - Discord and Apprise notifications are now sent as a **single digest at the end of each scan**, listing the files that were downloaded, instead of one message per file. The list is split into batches (20 lines per message, with a short pause between them) to avoid Discord rate limiting. No message is sent when a scan downloads nothing. (Pushbullet and Amazon SNS are unchanged and still fire per file.)
+  - Each schedule now writes its own log file under `/config/logs/schedules/<schedule name>.log`, so a schedule's activity can be followed from disk without the web UI. General application logs remain in `/config/logs/davos.log`.
+
 - **2.4.1**
   - A running schedule with no active transfer now shows a short status line (last scan time and re-scan interval) instead of an empty panel. The live progress table still appears while a scan is actually downloading files; between scans the schedule simply reports that it is idle.
 

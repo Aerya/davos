@@ -1,3 +1,19 @@
+Fixes : 
+– Updated jsch for sFTP negotiation
+– Added Discord/Apprise notifications
+– Added remote FTP and local browsing features to browse and select folders
+
+
+[Screens]([http://localhost:8080](https://upandclear.org/2026/06/17/davos-automatisation-ftp-avec-webui/))
+
+
+
+
+
+
+
+
+
 # davos
 
 [![Build Status](http://ci.linuxserver.io/buildStatus/icon?job=Software/Davos/davos_10_Unit_Tests)](http://ci.linuxserver.io/job/Software/job/Davos/job/davos_10_Unit_Tests/) [![Documentation Status](https://readthedocs.org/projects/davos/badge/?version=latest)](http://davos.readthedocs.io/en/latest)

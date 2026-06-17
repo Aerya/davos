@@ -1,7 +1,7 @@
 Fixes : 
-– Updated jsch for sFTP negotiation
-– Added Discord/Apprise notifications
-– Added remote FTP and local browsing features to browse and select folders
+- Updated jsch for sFTP negotiation
+- Added Discord/Apprise notifications
+- Added remote FTP and local browsing features to browse and select folders
 
 
 [Screens]([http://localhost:8080](https://upandclear.org/2026/06/17/davos-automatisation-ftp-avec-webui/))

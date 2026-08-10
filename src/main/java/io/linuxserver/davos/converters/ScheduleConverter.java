@@ -173,7 +173,7 @@ public class ScheduleConverter implements Converter<ScheduleModel, Schedule> {
 
         for (Discord action : source.getNotifications().getDiscord()) {
 
-            LOGGER.debug("Converting Discord to internal action: {}", action.getWebhookUrl());
+            LOGGER.debug("Converting Discord notification to internal action");
 
             ActionModel actionModel = new ActionModel();
             actionModel.id = action.getId();

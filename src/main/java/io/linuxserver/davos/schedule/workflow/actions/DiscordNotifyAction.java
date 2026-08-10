@@ -26,6 +26,10 @@ public class DiscordNotifyAction implements ScheduleSummaryAction {
     static final int BATCH_SIZE = 20;
     /** Pause between consecutive messages, in milliseconds. */
     static final long DELAY_BETWEEN_MESSAGES_MS = 1000;
+    /** Discord rejects webhook messages whose content exceeds 2,000 characters. */
+    static final int MAX_CONTENT_LENGTH = 2000;
+    /** Discord's edge protection rejects the default Java 8 user agent. */
+    static final String USER_AGENT = "Davos/1.0 (+https://github.com/Aerya/davos)";
 
     private RestTemplate restTemplate = new RestTemplate();
     private String webhookUrl;
@@ -45,20 +49,48 @@ public class DiscordNotifyAction implements ScheduleSummaryAction {
         int total = downloadedFileNames.size();
         LOGGER.info("Sending Discord digest for {} file(s) downloaded by schedule '{}'", total, scheduleName);
 
-        for (int start = 0; start < total; start += BATCH_SIZE) {
+        for (int start = 0; start < total;) {
 
-            int end = Math.min(start + BATCH_SIZE, total);
-            List<String> batch = downloadedFileNames.subList(start, end);
-
-            String header = String.format("**%s** — %d file(s) downloaded (showing %d-%d of %d):",
-                    scheduleName, total, start + 1, end, total);
-            String content = header + "\n" + String.join("\n", batch);
+            int end = findBatchEnd(downloadedFileNames, start);
+            String content = buildContent(downloadedFileNames, start, end);
 
             sendMessage(content);
 
             if (end < total)
                 pause();
+
+            start = end;
         }
+    }
+
+    private int findBatchEnd(List<String> downloadedFileNames, int start) {
+
+        int maximumEnd = Math.min(start + BATCH_SIZE, downloadedFileNames.size());
+        int end = start + 1;
+
+        while (end < maximumEnd && buildRawContent(downloadedFileNames, start, end + 1).length() <= MAX_CONTENT_LENGTH)
+            end++;
+
+        return end;
+    }
+
+    private String buildContent(List<String> downloadedFileNames, int start, int end) {
+
+        String content = buildRawContent(downloadedFileNames, start, end);
+
+        if (content.length() <= MAX_CONTENT_LENGTH)
+            return content;
+
+        return content.substring(0, MAX_CONTENT_LENGTH - 1) + "…";
+    }
+
+    private String buildRawContent(List<String> downloadedFileNames, int start, int end) {
+
+        int total = downloadedFileNames.size();
+        String header = String.format("**%s** — %d file(s) downloaded (showing %d-%d of %d):",
+                scheduleName, total, start + 1, end, total);
+
+        return header + "\n" + String.join("\n", downloadedFileNames.subList(start, end));
     }
 
     private void sendMessage(String content) {
@@ -68,6 +100,7 @@ public class DiscordNotifyAction implements ScheduleSummaryAction {
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.set("User-Agent", USER_AGENT);
 
         try {
 

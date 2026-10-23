@@ -5,6 +5,15 @@
 # wrapper, so the build must run on a JDK 8.
 FROM eclipse-temurin:8-jdk AS build
 
+# eMudhra: refresh the OS trust store for this security update.
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends ca-certificates \
+    && update-ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY security/emudhra/distrust-java.sh /tmp/distrust-java.sh
+RUN sh /tmp/distrust-java.sh && rm /tmp/distrust-java.sh
+
 WORKDIR /src
 
 # Copy the wrapper first so the Gradle distribution can be cached between
@@ -23,6 +32,15 @@ RUN ./gradlew --no-daemon -Penv=release clean bootRepackage -x test
 
 # ---- Runtime stage --------------------------------------------------------
 FROM eclipse-temurin:8-jre
+
+# eMudhra: refresh the OS trust store for this security update.
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends ca-certificates \
+    && update-ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY security/emudhra/distrust-java.sh /tmp/distrust-java.sh
+RUN sh /tmp/distrust-java.sh && rm /tmp/distrust-java.sh
 
 LABEL org.opencontainers.image.title="davos" \
       org.opencontainers.image.description="FTP/SFTP download automation tool" \

@@ -26,6 +26,12 @@ A fair number of services still rely on "file-drops" to transport data from plac
 
 # How it works
 
+### TLS security — October 2026
+
+Update image trust stores and TLS components following the eMudhra incident. Checks cover the compromised chains, including both No CT cases, and a valid HTTPS connection. Running images remain unchanged: schedule their replacement after validation.
+
+[Incident details](https://emudhra.we-have-a-problem.com/) · [TLS checks](security/emudhra/README.md)
+
 ## Hosts
 
 All periodic scans (Schedules) require a host to connect to. These can be added individually:
